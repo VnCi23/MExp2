@@ -8,16 +8,26 @@ const Signup = () => {
 
     const handleSignup = async (e) => {
         e.preventDefault();
-        const response = await fetch('https://mexp2.vercel.app/api/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        const data = await response.json();
-        if (data.message === "User registered successfully") {
-            navigate('/login');
-        } else {
-            alert("Error during registration");
+        try {
+            const response = await fetch('https://mexp2-backend.vercel.app/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.message === "User registered successfully") {
+                navigate('/login');
+            } else {
+                alert("Error during registration");
+            }
+        } catch (error) {
+            console.error('Error during signup:', error.message);
+            alert("An error occurred during signup. Please try again.");
         }
     };
 
